@@ -11,9 +11,9 @@ extern keymap_config_t keymap_config;
 #define _QWERTY 0
 #define _COLEMAK 1
 #define _DVORAK 2
-#define _LOWER 3
-#define _RAISE 4
-#define _WORKMAN 5
+#define _WORKMAN 3
+#define _LOWER 4
+#define _RAISE 5
 #define _ADJUST 16
 
 enum custom_keycodes {
@@ -202,6 +202,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+    case WORKMAN:
+      if (record->event.pressed) {
+        #ifdef AUDIO_ENABLE
+          PLAY_SONG(tone_workman);
+        #endif
+        persistent_default_layer_set(1UL<<_WORKMAN);
+      }
+      return false;
+      break;
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
@@ -219,15 +228,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else {
         layer_off(_RAISE);
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-      break;
-    case WORKMAN:
-      if (record->event.pressed) {
-        #ifdef AUDIO_ENABLE
-          PLAY_SONG(tone_workman);
-        #endif
-        persistent_default_layer_set(1UL<<_WORKMAN);
       }
       return false;
       break;
