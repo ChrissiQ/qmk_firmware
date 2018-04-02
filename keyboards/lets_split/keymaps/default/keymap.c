@@ -101,10 +101,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_WORKMAN] = KEYMAP( \
-  KC_ESC,  KC_Q,    KC_D,    KC_R,    KC_W,    KC_B,          KC_J,    KC_F,    KC_U,    KC_P,    KC_SCLN, KC_BSLS, \
-  KC_BSPC, KC_A,    KC_S,    KC_H,    KC_T,    KC_G,          KC_Y,    KC_N,    KC_E,    KC_O,    KC_I,    KC_QUOT, \
-  KC_TAB,  KC_Z,    KC_X,    KC_M,    KC_C,    KC_V,          KC_K,    KC_L,    KC_COMM, KC_DOT,  KC_SLSH, KC_DEL, \
-  KC_LCTL, KC_LGUI, KC_LALT, ADJUST,  LOWER,   SFT_T(KC_ENT), KC_SPC,  RAISE,   NAV,     KC_RSFT, KC_RGUI, KC_LCAP \
+  KC_ESC,  KC_Q,    KC_D,    KC_R,    KC_W,    KC_B,          KC_J,    KC_F,    KC_U,      KC_P,    KC_SCLN, KC_BSLS, \
+  KC_BSPC, KC_A,    KC_S,    KC_H,    KC_T,    KC_G,          KC_Y,    KC_N,    KC_E,      KC_O,    KC_I,    KC_QUOT, \
+  KC_TAB,  KC_Z,    KC_X,    KC_M,    KC_C,    KC_V,          KC_K,    KC_L,    KC_COMM,   KC_DOT,  KC_SLSH, KC_DEL, \
+  KC_LCTL, KC_LGUI, KC_LALT, ADJUST,  LOWER,   SFT_T(KC_ENT), KC_SPC,  RAISE,   TT(_NAV),  KC_RSFT, KC_RGUI, KC_LCAP \
 ),
 
 /* Lower
