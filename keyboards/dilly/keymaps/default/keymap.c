@@ -13,14 +13,14 @@ extern keymap_config_t keymap_config;
 
 // Tap-Hold keys
 #define KC_ASFT MT(MOD_LSFT, KC_A)
-#define KC_F_L3 LT(_FN3, KC_F)
+#define KC_T_L3 LT(_FN3, KC_T)
 #define KC_ZCTL MT(MOD_LCTL, KC_Z)
 #define KC_XALT MT(MOD_LALT, KC_X)
-#define KC_CGUI MT(MOD_LGUI, KC_C)
-#define KC_V_L4 LT(_FN4, KC_V)
-#define KC_SPL2 LT(_FN2, KC_SPC)
-#define KC_B_L1 LT(_FN1, KC_B)
-#define KC_N_L5 LT(_FN5, KC_N)
+#define KC_MGUI MT(MOD_LGUI, KC_M)
+#define KC_C_L4 LT(_FN4, KC_C)
+#define KC_V_L2 LT(_FN2, KC_V)
+#define KC_K_L1 LT(_FN1, KC_K)
+#define KC_L_L5 LT(_FN5, KC_L)
 #define KC_MALT MT(MOD_RALT, KC_M)
 #define KC_BSCT MT(MOD_RCTL, KC_BSPC)
 #define KC_ENTS MT(MOD_RSFT, KC_ENT)
@@ -31,9 +31,9 @@ extern keymap_config_t keymap_config;
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_BASE] = LAYOUT_ortho_3x10(
-    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-    KC_ASFT, KC_S,    KC_D,    KC_F_L3, KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_ESCS,
-    KC_ZCTL, KC_XALT, KC_CGUI, KC_V_L4, KC_SPL2, KC_B_L1, KC_N_L5, KC_MALT, KC_BSCT, KC_ENTS
+    KC_Q,    KC_D,    KC_R,    KC_W,    KC_B,    KC_J,    KC_F,    KC_U,    KC_P,    KC_ESCS,
+    KC_ASFT, KC_S,    KC_H,    KC_T_L3, KC_G,    KC_Y,    KC_N,    KC_E,    KC_O,    KC_I,
+    KC_ZCTL, KC_XALT, KC_MGUI, KC_C_L4, KC_V_L2, KC_K_L1, KC_L_L5, KC_SPC,  KC_BSCT, KC_ENTS
   ),
 
   [_FN1] = LAYOUT_ortho_3x10(
