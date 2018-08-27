@@ -245,6 +245,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else {
         layer_off(_LOWER);
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
+        SEND_STRING(SS_UP(X_LGUI));
+        SEND_STRING(SS_UP(X_LCTRL));
       }
       return false;
       break;
@@ -276,19 +278,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     case MM_CLTB:
       if (record->event.pressed) {
-        SEND_STRING(SS_DOWN(X_LCTRL)SS_TAP(X_TAB)SS_UP(X_LCTRL));
+        SEND_STRING(SS_DOWN(X_LCTRL)SS_TAP(X_TAB));
       }
       return false;
       break;
     case MM_ALTB:
       if (record->event.pressed) {
-        SEND_STRING(SS_DOWN(X_LGUI)SS_TAP(X_TAB)SS_UP(X_LGUI));
+        SEND_STRING(SS_DOWN(X_LGUI)SS_TAP(X_TAB));
       }
       return false;
       break;
     case MM_CLES:
       if (record->event.pressed) {
-        SEND_STRING(SS_DOWN(X_LCTRL)SS_TAP(X_ESCAPE)SS_UP(X_LCTRL));
+        SEND_STRING(SS_DOWN(X_LCTRL)SS_TAP(X_ESCAPE));
       }
       return false;
       break;
