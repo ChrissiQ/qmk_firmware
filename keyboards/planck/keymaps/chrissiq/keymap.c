@@ -305,18 +305,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case MM_CLTB:
       if (record->event.pressed) {
         SEND_STRING(SS_DOWN(X_LCTRL)SS_TAP(X_TAB));
+      } else {
+        SEND_STRING(SS_UP(X_LCTRL));
       }
       return false;
       break;
     case MM_ALTB:
       if (record->event.pressed) {
         SEND_STRING(SS_DOWN(X_LGUI)SS_TAP(X_TAB));
+      } else {
+        SEND_STRING(SS_UP(X_LGUI));
       }
       return false;
       break;
     case MM_CLES:
       if (record->event.pressed) {
         SEND_STRING(SS_DOWN(X_LCTRL)SS_TAP(X_ESCAPE));
+      } else {
+        SEND_STRING(SS_UP(X_LCTRL));
       }
       return false;
       break;
