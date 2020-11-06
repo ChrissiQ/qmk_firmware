@@ -45,7 +45,8 @@ enum custom_keycodes {
   BACKLIT,
   RGBRST,
   ALTTAB,
-  SLTTAB
+  SLTTAB,
+  CTRLESC
 };
 
 enum macro_keycodes {
@@ -73,7 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, KC_LPRN, XXXXXXX,                      XXXXXXX, KC_RPRN, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                            LOWER,  KC_ENT, KC_LSFT,    XXXXXXX, XXXXXXX,   RAISE \
+                                            LOWER,  KC_ENT, KC_LSFT,    XXXXXXX, CTRLESC,   RAISE \
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -230,7 +231,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           unregister_code(KC_TAB);
         }
         return false;
-    case SLTTAB:
+    case SLTTAB: // shift alt tab
         if (record->event.pressed) {
           if (!is_alt_tab_active) {
             is_alt_tab_active = true;
@@ -241,6 +242,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } else {
           unregister_code(KC_TAB);
           unregister_code(KC_LSFT);
+        }
+        return false;
+    case CTRLESC:
+        if (record->event.pressed) {
+          register_code(KC_LCTL);
+          register_code(KC_ESC);
+        } else {
+          unregister_code(KC_ESC);
+          unregister_code(KC_LCTL);
         }
         return false;
     case RGB_MOD:
