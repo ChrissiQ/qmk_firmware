@@ -35,13 +35,17 @@ extern uint8_t is_master;
 #define _RAISE 2
 #define _ADJUST 3
 
+bool is_alt_tab_active = false;
+
 enum custom_keycodes {
   WORKMAN = SAFE_RANGE,
   LOWER,
   RAISE,
   ADJUST,
   BACKLIT,
-  RGBRST
+  RGBRST,
+  ALTTAB,
+  SLTTAB
 };
 
 enum macro_keycodes {
@@ -69,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, KC_LPRN, XXXXXXX,                      XXXXXXX, KC_RPRN, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                            LOWER,  KC_ENT, KC_LSFT,    KC_LGUI,  KC_SPC,   RAISE \
+                                            LOWER,  KC_ENT, KC_LSFT,    XXXXXXX, XXXXXXX,   RAISE \
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -81,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        KC_TAB, XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, XXXXXXX,                      XXXXXXX, KC_RBRC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                            LOWER,  KC_ENT, KC_LSFT,    KC_LGUI,  KC_SPC,   RAISE \
+                                            LOWER,  ALTTAB,  SLTTAB,    KC_LGUI,  KC_SPC,   RAISE \
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -115,13 +119,13 @@ void update_tri_layer_RGB(uint8_t layer1, uint8_t layer2, uint8_t layer3) {
 }
 
 void matrix_init_user(void) {
-    #ifdef RGBLIGHT_ENABLE
-      RGB_current_mode = rgblight_config.mode;
-    #endif
-    //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
-    #ifdef SSD1306OLED
-        iota_gfx_init(!has_usb());   // turns on the display
-    #endif
+  #ifdef RGBLIGHT_ENABLE
+    RGB_current_mode = rgblight_config.mode;
+  #endif
+  //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
+  #ifdef SSD1306OLED
+    iota_gfx_init(!has_usb());   // turns on the display
+  #endif
 }
 
 //SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
@@ -174,9 +178,9 @@ void iota_gfx_task_user(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
-#ifdef SSD1306OLED
-    set_keylog(keycode, record);
-#endif
+    #ifdef SSD1306OLED
+      set_keylog(keycode, record);
+    #endif
     // set_timelog();
   }
 
@@ -202,6 +206,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else {
         layer_off(_RAISE);
         update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
+        if (is_alt_tab_active) {
+          is_alt_tab_active = false;
+          unregister_code(KC_LGUI);
+        }
       }
       return false;
     case ADJUST:
@@ -209,6 +217,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           layer_on(_ADJUST);
         } else {
           layer_off(_ADJUST);
+        }
+        return false;
+    case ALTTAB:
+        if (record->event.pressed) {
+          if (!is_alt_tab_active) {
+            is_alt_tab_active = true;
+            register_code(KC_LGUI);
+          }
+          register_code(KC_TAB);
+        } else {
+          unregister_code(KC_TAB);
+        }
+        return false;
+    case SLTTAB:
+        if (record->event.pressed) {
+          if (!is_alt_tab_active) {
+            is_alt_tab_active = true;
+            register_code(KC_LGUI);
+          }
+          register_code(KC_LSFT);
+          register_code(KC_TAB);
+        } else {
+          unregister_code(KC_TAB);
+          unregister_code(KC_LSFT);
         }
         return false;
     case RGB_MOD:
