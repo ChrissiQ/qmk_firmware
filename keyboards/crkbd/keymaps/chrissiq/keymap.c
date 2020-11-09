@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 
-
 #ifdef RGBLIGHT_ENABLE
 //Following line allows macro to read current RGB settings
 extern rgblight_config_t rgblight_config;
@@ -34,6 +33,13 @@ extern uint8_t is_master;
 #define _LOWER 1
 #define _RAISE 2
 #define _ADJUST 3
+#define _XCV 4
+
+#define CTRLESC LCTL(KC_ESC)
+#define H_XCV LT(_XCV, KC_H)
+#define KC_COPY LGUI(KC_C)
+#define KC_CUT LGUI(KC_X)
+#define KC_PASTE LGUI(KC_V)
 
 bool is_alt_tab_active = false;
 
@@ -45,8 +51,7 @@ enum custom_keycodes {
   BACKLIT,
   RGBRST,
   ALTTAB,
-  SLTTAB,
-  CTRLESC
+  SLTTAB
 };
 
 enum macro_keycodes {
@@ -58,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB,    KC_Q,    KC_D,    KC_R,    KC_W,    KC_B,                         KC_J,    KC_F,    KC_U,    KC_P, KC_SCLN, KC_BSLS,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_BSPC,    KC_A,    KC_S,    KC_H,    KC_T,    KC_G,                         KC_Y,    KC_N,    KC_E,    KC_O,  KC_I,   KC_QUOT,\
+      KC_BSPC,    KC_A,    KC_S,   H_XCV,    KC_T,    KC_G,                         KC_Y,    KC_N,    KC_E,    KC_O,  KC_I,   KC_QUOT,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL,    KC_Z,    KC_X,    KC_M,    KC_C,    KC_V,                         KC_K,    KC_L, KC_COMM,  KC_DOT, KC_SLSH, KC_RALT,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -74,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, KC_LPRN, XXXXXXX,                      XXXXXXX, KC_RPRN, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                            LOWER,  KC_ENT, KC_LSFT,    XXXXXXX, CTRLESC,   RAISE \
+                                          _______, _______, _______,    _______, CTRLESC, _______ \
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -86,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        KC_TAB, XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, XXXXXXX,                      XXXXXXX, KC_RBRC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                            LOWER,  ALTTAB,  SLTTAB,    KC_LGUI,  KC_SPC,   RAISE \
+                                          _______,  ALTTAB,  SLTTAB,    _______, _______, _______ \
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -98,7 +103,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                            LOWER,  KC_ENT, KC_LSFT,    KC_LGUI,  KC_SPC,   RAISE \
+                                          _______, _______, _______,    _______, _______, _______ \
+                                      //`--------------------------'  `--------------------------'
+  ),
+
+  [_XCV] = LAYOUT_split_3x6_3( \
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______,  KC_CUT, KC_COPY, _______,KC_PASTE, _______,                      _______, _______, _______, _______, _______, _______,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,\
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          _______, _______, _______,    _______, _______, _______ \
+                                      //`--------------------------'  `--------------------------'
                                       //`--------------------------'  `--------------------------'
   )
 };
@@ -242,15 +260,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } else {
           unregister_code(KC_TAB);
           unregister_code(KC_LSFT);
-        }
-        return false;
-    case CTRLESC:
-        if (record->event.pressed) {
-          register_code(KC_LCTL);
-          register_code(KC_ESC);
-        } else {
-          unregister_code(KC_ESC);
-          unregister_code(KC_LCTL);
         }
         return false;
     case RGB_MOD:
