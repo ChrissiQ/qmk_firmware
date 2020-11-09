@@ -40,6 +40,13 @@ extern uint8_t is_master;
 #define KC_COPY LGUI(KC_C)
 #define KC_CUT LGUI(KC_X)
 #define KC_PASTE LGUI(KC_V)
+#define S_SAVE TD(_S_SAVE)
+#define A_ALL TD(_A_ALL)
+#define Z_UNDO TD(_Z_UNDO)
+#define R_REDO TD(_R_REDO)
+#define F_FIND TD(_F_FIND)
+#define K_MD1 MT(MOD_LALT | MOD_LSFT, KC_K)
+#define L_MD2 MT(MOD_LALT | (MOD_LCTL | MOD_LSFT), KC_L)
 
 bool is_alt_tab_active = false;
 
@@ -54,18 +61,36 @@ enum custom_keycodes {
   SLTTAB
 };
 
-enum macro_keycodes {
-  KC_SAMPLEMACRO,
+typedef struct {
+    bool is_press_action;
+    uint8_t state;
+} tap;
+
+enum {
+    SINGLE_TAP = 1,
+    DOUBLE_HOLD,
+    DOUBLE_TAP
 };
+
+// Tap dance enums
+enum {
+    _S_SAVE,
+    _A_ALL,
+    _Z_UNDO,
+    _R_REDO,
+    _F_FIND
+};
+
+uint8_t cur_dance(qk_tap_dance_state_t *state);
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_WORKMAN] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_TAB,    KC_Q,    KC_D,    KC_R,    KC_W,    KC_B,                         KC_J,    KC_F,    KC_U,    KC_P, KC_SCLN, KC_BSLS,\
+       KC_TAB,    KC_Q,    KC_D,  R_REDO,    KC_W,    KC_B,                         KC_J,  F_FIND,    KC_U,    KC_P, KC_SCLN, KC_BSLS,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_BSPC,    KC_A,    KC_S,   H_XCV,    KC_T,    KC_G,                         KC_Y,    KC_N,    KC_E,    KC_O,  KC_I,   KC_QUOT,\
+      KC_BSPC,   A_ALL,  S_SAVE,   H_XCV,    KC_T,    KC_G,                         KC_Y,    KC_N,    KC_E,    KC_O,  KC_I,   KC_QUOT,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL,    KC_Z,    KC_X,    KC_M,    KC_C,    KC_V,                         KC_K,    KC_L, KC_COMM,  KC_DOT, KC_SLSH, KC_RALT,\
+      KC_LCTL,  Z_UNDO,    KC_X,    KC_M,    KC_C,    KC_V,                        K_MD1,   L_MD2, KC_COMM,  KC_DOT, KC_SLSH, KC_RALT,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                             LOWER,  KC_ENT, KC_LSFT,    KC_LGUI,  KC_SPC,   RAISE \
                                       //`--------------------------'  `--------------------------'
@@ -116,7 +141,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______, _______, _______,    _______, _______, _______ \
-                                      //`--------------------------'  `--------------------------'
                                       //`--------------------------'  `--------------------------'
   )
 };
@@ -283,3 +307,133 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
+
+// TAP DANCES
+uint8_t cur_dance(qk_tap_dance_state_t *state) {
+  if (state->count == 1) {
+    return SINGLE_TAP;
+  } else if (state->count == 2) {
+    if (state->interrupted) return DOUBLE_TAP;
+    else if (state->pressed) return DOUBLE_HOLD;
+    else return DOUBLE_TAP;
+  } else return 4; // Any number higher than the maximum state value you return above
+}
+
+// S TAP DANCE
+static tap s_tap_state = {
+    .is_press_action = true,
+    .state = 0
+};
+void s_finished(qk_tap_dance_state_t *state, void *user_data) {
+    s_tap_state.state = cur_dance(state);
+    switch (s_tap_state.state) {
+        case SINGLE_TAP: register_code(KC_S); break;
+        case DOUBLE_HOLD: register_code16(LGUI(KC_S)); break;
+        case DOUBLE_TAP: tap_code(KC_S); register_code(KC_S); break;
+    }
+}
+void s_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (s_tap_state.state) {
+        case SINGLE_TAP: unregister_code(KC_S); break;
+        case DOUBLE_HOLD: unregister_code16(LGUI(KC_S)); break;
+        case DOUBLE_TAP: unregister_code(KC_S); break;
+    }
+    s_tap_state.state = 0;
+}
+
+// A TAP DANCE
+static tap a_tap_state = {
+    .is_press_action = true,
+    .state = 0
+};
+void a_finished(qk_tap_dance_state_t *state, void *user_data) {
+    a_tap_state.state = cur_dance(state);
+    switch (a_tap_state.state) {
+        case SINGLE_TAP: register_code(KC_A); break;
+        case DOUBLE_HOLD: register_code16(LGUI(KC_A)); break;
+        case DOUBLE_TAP: tap_code(KC_A); register_code(KC_A); break;
+    }
+}
+void a_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (a_tap_state.state) {
+        case SINGLE_TAP: unregister_code(KC_A); break;
+        case DOUBLE_HOLD: unregister_code16(LGUI(KC_A)); break;
+        case DOUBLE_TAP: unregister_code(KC_A); break;
+    }
+    a_tap_state.state = 0;
+}
+
+// Z TAP DANCE
+static tap z_tap_state = {
+    .is_press_action = true,
+    .state = 0
+};
+void z_finished(qk_tap_dance_state_t *state, void *user_data) {
+    z_tap_state.state = cur_dance(state);
+    switch (z_tap_state.state) {
+        case SINGLE_TAP: register_code(KC_Z); break;
+        case DOUBLE_HOLD: register_code16(LGUI(KC_Z)); break;
+        case DOUBLE_TAP: tap_code(KC_Z); register_code(KC_Z); break;
+    }
+}
+void z_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (z_tap_state.state) {
+        case SINGLE_TAP: unregister_code(KC_Z); break;
+        case DOUBLE_HOLD: unregister_code16(LGUI(KC_Z)); break;
+        case DOUBLE_TAP: unregister_code(KC_Z); break;
+    }
+    z_tap_state.state = 0;
+}
+
+// R TAP DANCE
+static tap r_tap_state = {
+    .is_press_action = true,
+    .state = 0
+};
+void r_finished(qk_tap_dance_state_t *state, void *user_data) {
+    r_tap_state.state = cur_dance(state);
+    switch (r_tap_state.state) {
+        case SINGLE_TAP: register_code(KC_R); break;
+        case DOUBLE_HOLD: register_code16(LGUI(KC_R)); break;
+        case DOUBLE_TAP: tap_code(KC_R); register_code(KC_R); break;
+    }
+}
+void r_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (r_tap_state.state) {
+        case SINGLE_TAP: unregister_code(KC_R); break;
+        case DOUBLE_HOLD: unregister_code16(LGUI(KC_R)); break;
+        case DOUBLE_TAP: unregister_code(KC_R); break;
+    }
+    r_tap_state.state = 0;
+}
+
+// F TAP DANCE
+static tap f_tap_state = {
+    .is_press_action = true,
+    .state = 0
+};
+void f_finished(qk_tap_dance_state_t *state, void *user_data) {
+    f_tap_state.state = cur_dance(state);
+    switch (f_tap_state.state) {
+        case SINGLE_TAP: register_code(KC_F); break;
+        case DOUBLE_HOLD: register_code16(LGUI(KC_F)); break;
+        case DOUBLE_TAP: tap_code(KC_F); register_code(KC_F); break;
+    }
+}
+void f_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (f_tap_state.state) {
+        case SINGLE_TAP: unregister_code(KC_F); break;
+        case DOUBLE_HOLD: unregister_code16(LGUI(KC_F)); break;
+        case DOUBLE_TAP: unregister_code(KC_F); break;
+    }
+    f_tap_state.state = 0;
+}
+
+// TAP DANCE ACTIONS
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [_S_SAVE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, s_finished, s_reset),
+    [_A_ALL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, a_finished, a_reset),
+    [_Z_UNDO] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, z_finished, z_reset),
+    [_R_REDO] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, r_finished, r_reset),
+    [_F_FIND] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, f_finished, f_reset)
+};
