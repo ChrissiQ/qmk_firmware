@@ -11,5 +11,4 @@ SRC +=  ./lib/glcdfont.c \
 
 RGBLIGHT_ENABLE = no
 RGB_MATRIX_ENABLE = WS2812
-TAP_DANCE_ENABLE = yes
-EXTRAFLAGS += -flto
+MOUSEKEY_ENABLE = no
