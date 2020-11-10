@@ -14,7 +14,7 @@
 #ifdef RGBLIGHT_ENABLE
     #undef RGBLED_NUM
     #define RGBLIGHT_ANIMATIONS
-    #define RGBLED_NUM 54  // Number of LEDs
+    #define RGBLED_NUM 27  // Number of LEDs
     #define RGBLIGHT_LIMIT_VAL 120
     #define RGBLIGHT_HUE_STEP 10
     #define RGBLIGHT_SAT_STEP 17
