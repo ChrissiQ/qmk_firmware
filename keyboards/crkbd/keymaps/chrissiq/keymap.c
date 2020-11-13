@@ -53,6 +53,7 @@ extern uint8_t is_master;
 #define Z_GUI LGUI_T(KC_Z)
 #define K_MD1 MT(MOD_LALT | MOD_LSFT, KC_K)
 #define L_MD2 MT(MOD_LALT | (MOD_LCTL | MOD_LSFT), KC_L)
+#define SPOTLGT LGUI(KC_SPC)
 
 bool is_alt_tab_active = false;
 
@@ -88,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, KC_LPRN, XXXXXXX,                      XXXXXXX, KC_RPRN, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          _______, _______, _______,    _______, CTRLESC, _______ \
+                                          _______, _______, _______,    SPOTLGT, CTRLESC, _______ \
                                       //`--------------------------'  `--------------------------'
   ),
 
