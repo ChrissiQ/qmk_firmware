@@ -35,8 +35,8 @@ extern uint8_t is_master;
 #define _ADJUST 3
 
 #define CTRLESC LCTL(KC_ESC)
-#define K_MD1 MT(MOD_LALT | MOD_LSFT, KC_K)
-#define L_MD2 MT(MOD_LALT | (MOD_LCTL | MOD_LSFT), KC_L)
+#define LAY_CYC LSA(KC_SPC)
+#define LAY_CYB MEH(KC_SPC)
 #define SPOTLGT LGUI(KC_SPC)
 
 bool is_alt_tab_active = false;
@@ -59,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_BSPC,    KC_A,    KC_S,    KC_H,    KC_T,    KC_G,                         KC_Y,    KC_N,    KC_E,    KC_O,  KC_I,   KC_QUOT,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL,    KC_Z,    KC_X,    KC_M,    KC_C,    KC_V,                        K_MD1,   L_MD2, KC_COMM,  KC_DOT, KC_SLSH, KC_RALT,\
+      KC_LCTL,    KC_Z,    KC_X,    KC_M,    KC_C,    KC_V,                         KC_K,    KC_L, KC_COMM,  KC_DOT, KC_SLSH, KC_RALT,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                             LOWER,  KC_ENT, KC_LSFT,    KC_LGUI,  KC_SPC,   RAISE \
                                       //`--------------------------'  `--------------------------'
@@ -95,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, XXXXXXX,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX,\
+      RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, LAY_CYC, LAY_CYB,                      XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______, _______, _______,    _______, _______, _______ \
                                       //`--------------------------'  `--------------------------'
